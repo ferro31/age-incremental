@@ -9,8 +9,11 @@
     <canvas id="unity-canvas" width=1000 height=800 tabindex="-1" style="width: 1000px; height: 800px; background: #231F20"></canvas>
     <script src="Build/alpha release.loader.js"></script>
     <script>
+      var unityInstance = null; // Store the Unity instance
+      var gameInstance = null;
+
+      // Mobile device check and viewport settings (original code)
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
         var meta = document.createElement('meta');
         meta.name = 'viewport';
         meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
@@ -32,9 +35,54 @@
         companyName: "DefaultCompany",
         productName: "ageincrementalport",
         productVersion: "1.0",
-        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      }, (progress) => {
+        // Show progress if needed
+      }).then((unityWebAssembly) => {
+        unityInstance = unityWebAssembly; // Store the Unity instance
+        gameInstance = unityWebAssembly;
+        resizeCanvas(); // Call the initial resize
+      }).catch((message) => {
+        console.error(message);
       });
+
+      function resizeCanvas() {
+        var aspectRatio = 5 / 4; // 10:8 aspect ratio
+        var windowWidth = window.innerWidth;
+        var windowHeight = window.innerHeight;
+
+        var newWidth, newHeight;
+
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+          //On Mobile, fill the screen
+          newWidth = windowWidth;
+          newHeight = windowHeight;
+        }
+        else{
+          // Determine if the width or height is the limiting factor
+          if (windowWidth / windowHeight > aspectRatio) {
+            // Height is the limiting factor
+            newHeight = windowHeight;
+            newWidth = windowHeight * aspectRatio;
+          } else {
+            // Width is the limiting factor
+            newWidth = windowWidth;
+            newHeight = windowWidth / aspectRatio;
+          }
+        }
+
+        var canvas = document.getElementById('unity-canvas');
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+        canvas.style.width = newWidth + 'px';  // Important for scaling in CSS
+        canvas.style.height = newHeight + 'px'; // Important for scaling in CSS
+
+        // Center the canvas (optional)
+        canvas.style.marginLeft = (windowWidth - newWidth) / 2 + 'px';
+        canvas.style.marginTop = (windowHeight - newHeight) / 2 + 'px';
+      }
+
+      // Call resizeCanvas on window resize
+      window.addEventListener('resize', resizeCanvas);
     </script>
   </body>
 </html>
