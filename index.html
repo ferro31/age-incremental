@@ -26,7 +26,7 @@
     <div id="unity-container">
       <canvas id="unity-canvas" width=1000 height=800 tabindex="-1" style="background: black"></canvas>
     </div>
-    <script src="Build/alpha release.loader.js"></script>
+    <script src="Build/a1.1.loader.js"></script>
     <script>
       var unityInstance = null; // Store the Unity instance
       var gameInstance = null;
@@ -47,9 +47,9 @@
       }
 
       createUnityInstance(document.querySelector("#unity-canvas"), {
-        dataUrl: "Build/alpha release.data",
-        frameworkUrl: "Build/alpha release.framework.js",
-        codeUrl: "Build/alpha release.wasm",
+        dataUrl: "Build/a1.1.data",
+        frameworkUrl: "Build/a1.1.framework.js",
+        codeUrl: "Build/a1.1.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "ageincrementalport",
